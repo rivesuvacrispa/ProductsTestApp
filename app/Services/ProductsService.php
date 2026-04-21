@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Enums\ProductSortType;
+use App\Enums\ProductSortEnum;
 use Illuminate\Support\Collection;
 
 class ProductsService
@@ -31,7 +31,7 @@ class ProductsService
         ?int $categoryId = null,
         ?bool $inStock = null,
         ?float $ratingFrom = null,
-        ProductSortType $sortType = ProductSortType::NEWEST,
+        ProductSortEnum $sortType = ProductSortEnum::NEWEST,
     ) : Collection {
 
     }

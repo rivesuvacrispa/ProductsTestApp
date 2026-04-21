@@ -56,7 +56,7 @@ class ProductsController extends Controller
      *     ),
      *     @OA\Parameter(
      *          name="sort", in="path", required=false,
-     *          description="Подстрочный поиск по названию товара",
+     *          description="Сортировка",
      *          @OA\Schema(type="string", enum={"price_asc", "price_desc", "rating_desc", "newest"}, example="0")
      *     ),
      *     @OA\Response(
