@@ -7,52 +7,42 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About Laravel
+# Веб-сервис для поиска товаров
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Описание
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Архитектура:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Архитектура приложения соответствует рекомендациям Laravel Framework и использует шаблон MVC (Model–View–Controller)
+- Бизнес-логика вынесена в отдельный сервисный слой в соответствии с принципом Single Responsibility Principle (SOLID) и практиками разделения слоёв (Layered Architecture)
+- Контроллер отвечает за обработку HTTP-запроса, валидацию входных данных, пагинацию и формирование HTTP-ответа, следуя принципу разделения ответственности (Separation of Concerns)
 
-## Learning Laravel
+База данных:
+- Локально использовался PostgreSQL
+- Содержит две основные сущности (помимо вспомогательных сущностей фреймворка): Категории товаров, Товары
+- Доступна популяция БД тестовыми данными с помощью отдельных сидеров для каждой ключевой сущности
+- Схема БД представлена на диаграмме ниже:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+![схема БД](./readme/db_scheme.png)
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+API:
+- GET api/v1/products/list - Поиск по товарам
+- Документация API доступна по ссылке http://localhost:8000/api/documentation в формате SWAGGER OpenAPI
+- Демонстрация спецификации API представлена на изображении ниже:
 
-## Agentic Development
+![схема БД](./readme/openapi.png)
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## Тестирование
 
-```bash
-composer require laravel/boost --dev
+Шаги, необходимые для использования сервиса локально:
 
-php artisan boost:install
-```
-
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+1. Склонировать данный репозиторий
+2. Переименовать .env.example в .env
+3. Заполнить необходимые .env переменные (для настройки желаемого подключения к БД)
+4. Выполнить команду `composer install`
+5. Применить миграции laravel `php artisan migrate`
+6. Запустить популяцию базы данных тестовыми данными `php artisan db:seed`
+7. Запустить локальный сервер `php artisan serve`
+8. Перейти по адресу http://localhost:8000/api/documentation
+9. Получить список товаров с нужными параметрами сортировки, пагинации и фильтрации
