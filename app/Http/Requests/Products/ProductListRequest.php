@@ -3,11 +3,14 @@
 namespace App\Http\Requests\Products;
 
 use App\Enums\ProductSortEnum;
+use App\Traits\PaginatesRequest;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ProductListRequest extends FormRequest
 {
+    use PaginatesRequest;
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -23,7 +26,7 @@ class ProductListRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             'q' => ['nullable', 'string', 'max:255'],
             'price_from' => ['nullable', 'numeric', 'min:0'],
             'price_to' => ['nullable', 'numeric'],
@@ -33,6 +36,8 @@ class ProductListRequest extends FormRequest
 
             'sort' => ['string', 'nullable'],
         ];
+
+        return array_merge($this->paginationRules(), $rules);
     }
 
     protected function prepareForValidation(): void

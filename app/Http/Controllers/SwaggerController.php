@@ -26,36 +26,36 @@ use OpenApi\Annotations as OA;
  * )
  *
  * @OA\Schema(
- *       schema="ValidationError",
- *       @OA\Property(property="message", type="string", example="The *** field must be a ***. (and 1 more error)"),
- *       @OA\Property(property="errors", type="object", example={"field1": {"The *** field must be a ***."}, "field2": {"The *** field must be *** characters."}})
- *   )
+ *     schema="ValidationError",
+ *     @OA\Property(property="message", type="string", example="The *** field must be a ***. (and 1 more error)"),
+ *     @OA\Property(property="errors", type="object", example={"field1": {"The *** field must be a ***."}, "field2": {"The *** field must be *** characters."}})
+ * )
  *
  * @OA\Response(
- *      response="ValidationResponse",
- *      description="Ошибка валидации данных",
- *      @OA\JsonContent(ref="#/components/schemas/ValidationError")
- *  )
+ *     response="ValidationResponse",
+ *     description="Ошибка валидации данных",
+ *     @OA\JsonContent(ref="#/components/schemas/ValidationError")
+ * )
  *
  * @OA\Schema(
- *        schema="NotFoundError",
- *        @OA\Property(property="message", type="string", example="The requested resource is not found or unavailable."),
- *    )
+ *     schema="NotFoundError",
+ *     @OA\Property(property="message", type="string", example="The requested resource is not found or unavailable."),
+ * )
  *
  * @OA\Response(
- *       response="NotFoundError",
- *       description="Сущность не найдена",
- *       @OA\JsonContent(ref="#/components/schemas/NotFoundError")
- *   )
+ *     response="NotFoundError",
+ *     description="Сущность не найдена",
+ *     @OA\JsonContent(ref="#/components/schemas/NotFoundError")
+ * )
  *
  * @OA\Schema(
- *      schema="PaginationMeta",
- *      title="Пагинация",
- *      @OA\Property(property="page", type="integer", example=1),
- *      @OA\Property(property="per_page", type="integer", example=10),
- *      @OA\Property(property="total", type="integer", example=50),
- *      @OA\Property(property="total_pages", type="integer", example=5),
- *  )
+ *     schema="PaginationMeta",
+ *     title="Пагинация",
+ *     @OA\Property(property="page", type="integer", example=1),
+ *     @OA\Property(property="per_page", type="integer", example=10),
+ *     @OA\Property(property="total", type="integer", example=50),
+ *     @OA\Property(property="total_pages", type="integer", example=5),
+ * )
  *
  * @OA\Schema(
  *     schema="Product",

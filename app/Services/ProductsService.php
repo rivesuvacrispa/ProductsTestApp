@@ -4,14 +4,14 @@ namespace App\Services;
 
 use App\Enums\ProductSortEnum;
 use App\Models\Product;
-use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Builder;
 
 class ProductsService
 {
     public function __construct() {}
 
     /**
-     * Получения коллекции товаров с доступными фильтрами и видом сортировки
+     * Получение запроса товаров с доступными фильтрами и видом сортировки
      *
      * @param string|null $searchQuery - Подстрочный поиск по названию товара
      * @param float|null $priceFrom - Фильтрация по цене, нижняя граница
@@ -20,9 +20,9 @@ class ProductsService
      * @param bool|null $inStock - Фильтрация по наличию
      * @param float|null $ratingFrom - Фильтрация по рейтингу, нижняя граница
      * @param ProductSortEnum|null $sortType - тип сортировки
-     * @return Collection
+     * @return Builder
      */
-    public function getProducts(
+    public function queryProducts(
         ?string $searchQuery = null,
         ?float $priceFrom = null,
         ?float $priceTo = null,
@@ -30,7 +30,7 @@ class ProductsService
         ?bool $inStock = null,
         ?float $ratingFrom = null,
         ?ProductSortEnum $sortType = ProductSortEnum::NEWEST,
-    ): Collection
+    ): Builder
     {
         $query = Product::query();
 
@@ -75,6 +75,6 @@ class ProductsService
             };
         }
 
-        return $query->get();
+        return $query;
     }
 }

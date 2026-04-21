@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Products\ProductListRequest;
+use App\Http\Resources\ProductResourceCollection;
 use App\Services\ProductsService;
 use OpenApi\Annotations as OA;
 
@@ -24,9 +25,19 @@ class ProductsController extends Controller
      *     tags={"Products"},
      *     summary="Получение списка товаров с фильтрацией, сортировкой и пагинацией",
      *     @OA\Parameter(
+     *          name="page", in="query", required=false,
+     *          description="Номер страницы",
+     *          @OA\Schema(type="int", default=1)
+     *     ),
+     *     @OA\Parameter(
+     *          name="per_page", in="query", required=false,
+     *          description="Кол-во сущностей на странице",
+     *          @OA\Schema(type="int", default=10)
+     *     ),
+     *     @OA\Parameter(
      *          name="q", in="query", required=false,
      *          description="Подстрочный поиск по названию товара",
-     *          @OA\Schema(type="string", default="", example="Яблоко")
+     *          @OA\Schema(type="string", default="", example="atque")
      *     ),
      *     @OA\Parameter(
      *          name="price_from", in="query", required=false,
@@ -67,15 +78,15 @@ class ProductsController extends Controller
      *         description="Успех",
      *             @OA\JsonContent(
      *              type="object",
-     *              @OA\Property(property="products", type="object", ref="#/components/schemas/Product"),
-     *              @OA\Property(property="pagination_meta", type="int", example="10", ref="#/components/schemas/PaginationMeta"),
+     *              @OA\Property(property="data", type="object", ref="#/components/schemas/Product"),
+     *              @OA\Property(property="pagination", type="int", example="10", ref="#/components/schemas/PaginationMeta"),
      *         )
      *     )
      * )
      */
-    public function list(ProductListRequest $request)
+    public function list(ProductListRequest $request): ProductResourceCollection
     {
-        $products = $this->productsService->getProducts(
+        $productsQuery = $this->productsService->queryProducts(
             $request->q(),
             $request->priceFrom(),
             $request->priceTo(),
@@ -85,11 +96,8 @@ class ProductsController extends Controller
             $request->sort()
         );
 
-        return response()->json([
-            'q' => $request->q(),
-            'in_stock' => $request->inStock(),
-            'products' => $products->toResourceCollection(),
-            'pagination_meta' => []
-        ]);
+        $products = $productsQuery->paginate(perPage: $request->perPage(), page: $request->page());
+
+        return new ProductResourceCollection($products);
     }
 }

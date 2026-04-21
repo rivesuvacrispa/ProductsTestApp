@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -14,13 +15,16 @@ class ProductResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        /** @var Product $product */
+        $product = $this->resource;
+
         return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'price' => $this->price,
-            'in_stock' => $this->in_stock,
-            'rating' => $this->rating,
-            'category_id' => $this->category_id
+            'id' => $product->id,
+            'name' => $product->name,
+            'price' => $product->price,
+            'in_stock' => $product->in_stock,
+            'rating' => $product->rating,
+            'category_id' => $product->category_id
         ];
     }
 }
