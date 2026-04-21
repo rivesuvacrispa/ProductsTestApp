@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Enums\ProductSortEnum;
+use App\Models\Product;
 use Illuminate\Support\Collection;
 
 class ProductsService
@@ -31,8 +32,52 @@ class ProductsService
         ?int $categoryId = null,
         ?bool $inStock = null,
         ?float $ratingFrom = null,
-        ProductSortEnum $sortType = ProductSortEnum::NEWEST,
-    ) : Collection {
+        ?ProductSortEnum $sortType = ProductSortEnum::NEWEST,
+    ): Collection
+    {
+        $query = Product::query();
 
+        if ($searchQuery)
+        {
+            $query->whereLike('name', "%$searchQuery%");
+        }
+
+        if (!is_null($priceFrom))
+        {
+            $query->where('price', '>=', $priceFrom);
+        }
+
+        if (!is_null($priceTo))
+        {
+            $query->where('price', '<=', $priceTo);
+        }
+
+        if (!is_null($categoryId))
+        {
+            $query->where('category_id', $categoryId);
+        }
+
+        if (!is_null($inStock))
+        {
+            $query->where('in_stock', $inStock);
+        }
+
+        if (!is_null($ratingFrom))
+        {
+            $query->where('rating', '>=', $ratingFrom);
+        }
+
+        if ($sortType)
+        {
+            match ($sortType)
+            {
+                ProductSortEnum::PRICE_ASC => $query->orderBy('price'),
+                ProductSortEnum::PRICE_DESC => $query->orderBy('price', 'desc'),
+                ProductSortEnum::RATING_DESC => $query->orderBy('rating', 'desc'),
+                ProductSortEnum::NEWEST => $query->orderBy('created_at', 'desc')->orderBy('id', 'desc'),
+            };
+        }
+
+        return $query->get();
     }
 }

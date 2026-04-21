@@ -35,38 +35,47 @@ class ProductListRequest extends FormRequest
         ];
     }
 
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('in_stock')) {
+            $this->merge([
+                'in_stock' => filter_var($this->in_stock, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
+            ]);
+        }
+    }
+
     public function q(): ?string
     {
-        return $this->validated('q');
+        return $this->input('q');
     }
 
     public function priceFrom(): ?float
     {
-        return $this->validated('price_from');
+        return $this->input('price_from');
     }
 
     public function priceTo(): ?float
     {
-        return $this->validated('price_to');
+        return $this->input('price_to');
     }
 
     public function categoryId(): ?int
     {
-        return $this->validated('category_id');
+        return $this->input('category_id');
     }
 
     public function inStock(): ?bool
     {
-        return $this->validated('in_stock');
+        return $this->input('in_stock');
     }
 
     public function ratingFrom(): ?float
     {
-        return $this->validated('rating_from');
+        return $this->input('rating_from');
     }
 
     public function sort(): ?ProductSortEnum
     {
-        return ProductSortEnum::tryFrom($this->validated('sort'));
+        return ProductSortEnum::tryFrom($this->input('sort'));
     }
 }

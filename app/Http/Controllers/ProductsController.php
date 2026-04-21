@@ -17,7 +17,6 @@ class ProductsController extends Controller
 {
     public function __construct(private readonly ProductsService $productsService) {}
 
-
     /**
      * @OA\GET(
      *     path="/products/list",
@@ -25,37 +24,37 @@ class ProductsController extends Controller
      *     tags={"Products"},
      *     summary="Получение списка товаров с фильтрацией, сортировкой и пагинацией",
      *     @OA\Parameter(
-     *          name="q", in="path", required=false,
+     *          name="q", in="query", required=false,
      *          description="Подстрочный поиск по названию товара",
      *          @OA\Schema(type="string", default="", example="Яблоко")
      *     ),
      *     @OA\Parameter(
-     *          name="price_from", in="path", required=false,
+     *          name="price_from", in="query", required=false,
      *          description="Фильтрация по цене, нижняя граница",
      *          @OA\Schema(type="number", format="float", default=20, example=15.12)
      *     ),
      *     @OA\Parameter(
-     *         name="price_to", in="path", required=false,
+     *         name="price_to", in="query", required=false,
      *         description="Фильтрация по цене, верхняя граница",
      *         @OA\Schema(type="number", format="float", default=50, example=55.55)
      *    ),
      *     @OA\Parameter(
-     *          name="category_id", in="path", required=false,
+     *          name="category_id", in="query", required=false,
      *          description="Фильтрация по айди категории",
-     *          @OA\Schema(type="int", example="1")
+     *          @OA\Schema(type="int", nullable=true, default=null)
      *     ),
      *     @OA\Parameter(
-     *          name="in_stock", in="path", required=false,
+     *          name="in_stock", in="query", required=false,
      *          description="Фильтрация по наличию",
-     *          @OA\Schema(type="boolean", example="false")
+     *          @OA\Schema(type="bool")
      *     ),
      *     @OA\Parameter(
-     *          name="rating_from", in="path", required=false,
+     *          name="rating_from", in="query", required=false,
      *          description="Фильтрация по рейтингу, нижняя граница",
-     *          @OA\Schema(type="number", format="float", default="3", example=4.5)
+     *          @OA\Schema(type="number", format="float", default=null)
      *     ),
      *     @OA\Parameter(
-     *          name="sort", in="path", required=false,
+     *          name="sort", in="query", required=false,
      *          description="Сортировка",
      *          @OA\Schema(type="string", enum={"price_asc", "price_desc", "rating_desc", "newest"}, example="0")
      *     ),
@@ -76,8 +75,21 @@ class ProductsController extends Controller
      */
     public function list(ProductListRequest $request)
     {
-        $products = $this->productsService->getProducts();
+        $products = $this->productsService->getProducts(
+            $request->q(),
+            $request->priceFrom(),
+            $request->priceTo(),
+            $request->categoryId(),
+            $request->inStock(),
+            $request->ratingFrom(),
+            $request->sort()
+        );
 
-        return response()->json($products->toResourceCollection());
+        return response()->json([
+            'q' => $request->q(),
+            'in_stock' => $request->inStock(),
+            'products' => $products->toResourceCollection(),
+            'pagination_meta' => []
+        ]);
     }
 }
