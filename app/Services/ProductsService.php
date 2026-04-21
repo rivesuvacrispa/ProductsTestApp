@@ -11,19 +11,16 @@ class ProductsService
     public function __construct() {}
 
     /**
+     * Получения коллекции товаров с доступными фильтрами и видом сортировки
      *
-     *
-     * Фильтры (через query-параметры):
-     *  q — поиск по подстроке в name
-     *  price_from, price_to
-     *  category_id
-     *  in_stock (true/false)
-     *  rating_from
-     *
-     * Сортировка:
-     * параметр sort с допустимыми значениями: price_asc, price_desc, rating_desc, newest.
-     *
-     * @return void
+     * @param string|null $searchQuery - Подстрочный поиск по названию товара
+     * @param float|null $priceFrom - Фильтрация по цене, нижняя граница
+     * @param float|null $priceTo - Фильтрация по цене, верхняя граница
+     * @param int|null $categoryId - Фильтрация по айди категории
+     * @param bool|null $inStock - Фильтрация по наличию
+     * @param float|null $ratingFrom - Фильтрация по рейтингу, нижняя граница
+     * @param ProductSortEnum|null $sortType - тип сортировки
+     * @return Collection
      */
     public function getProducts(
         ?string $searchQuery = null,
