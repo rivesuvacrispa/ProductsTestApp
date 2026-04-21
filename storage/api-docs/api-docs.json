@@ -1,0 +1,234 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Products Test App API documentation",
+        "description": "Документация к сервису поиска по товарам",
+        "contact": {
+            "name": "Vladimir Yagnaev",
+            "email": "vova.cpeda@yandex.ru"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        },
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000/api/v1/",
+            "description": "local dev server"
+        }
+    ],
+    "paths": {
+        "/products/list": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Получение списка товаров с фильтрацией, сортировкой и пагинацией",
+                "operationId": "list-products",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "path",
+                        "description": "Подстрочный поиск по названию товара",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "",
+                            "example": "Яблоко"
+                        }
+                    },
+                    {
+                        "name": "price_from",
+                        "in": "path",
+                        "description": "Фильтрация по цене, нижняя граница",
+                        "required": false,
+                        "schema": {
+                            "type": "number",
+                            "format": "float",
+                            "default": 20,
+                            "example": 15.12
+                        }
+                    },
+                    {
+                        "name": "price_to",
+                        "in": "path",
+                        "description": "Фильтрация по цене, верхняя граница",
+                        "required": false,
+                        "schema": {
+                            "type": "number",
+                            "format": "float",
+                            "default": 50,
+                            "example": 55.55
+                        }
+                    },
+                    {
+                        "name": "category_id",
+                        "in": "path",
+                        "description": "Фильтрация по айди категории",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": "1"
+                        }
+                    },
+                    {
+                        "name": "in_stock",
+                        "in": "path",
+                        "description": "Фильтрация по наличию",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "example": "false"
+                        }
+                    },
+                    {
+                        "name": "rating_from",
+                        "in": "path",
+                        "description": "Фильтрация по рейтингу, нижняя граница",
+                        "required": false,
+                        "schema": {
+                            "type": "number",
+                            "format": "float",
+                            "default": "3",
+                            "example": 4.5
+                        }
+                    },
+                    {
+                        "name": "sort",
+                        "in": "path",
+                        "description": "Подстрочный поиск по названию товара",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "price_asc",
+                                "price_desc",
+                                "rating_desc",
+                                "newest"
+                            ],
+                            "example": "0"
+                        }
+                    }
+                ],
+                "responses": {
+                    "422": {
+                        "$ref": "#/components/schemas/ValidationError"
+                    },
+                    "200": {
+                        "description": "Успех",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "products": {
+                                            "$ref": "#/components/schemas/Product"
+                                        },
+                                        "pagination_meta": {
+                                            "$ref": "#/components/schemas/PaginationMeta"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "ValidationError": {
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "The *** field must be a ***. (and 1 more error)"
+                    },
+                    "errors": {
+                        "type": "object",
+                        "example": {
+                            "field1": [
+                                "The *** field must be a ***."
+                            ],
+                            "field2": [
+                                "The *** field must be *** characters."
+                            ]
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "NotFoundError": {
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "The requested resource is not found or unavailable."
+                    }
+                },
+                "type": "object"
+            },
+            "PaginationMeta": {
+                "title": "Пагинация",
+                "properties": {
+                    "page": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "per_page": {
+                        "type": "integer",
+                        "example": 10
+                    },
+                    "total": {
+                        "type": "integer",
+                        "example": 50
+                    },
+                    "total_pages": {
+                        "type": "integer",
+                        "example": 5
+                    }
+                },
+                "type": "object"
+            },
+            "Product": {
+                "title": "Товар",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Товар 1"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "responses": {
+            "ValidationResponse": {
+                "description": "Ошибка валидации данных",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        }
+                    }
+                }
+            },
+            "NotFoundError": {
+                "description": "Сущность не найдена",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/NotFoundError"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Products",
+            "description": "Работа с товарами"
+        }
+    ]
+}
