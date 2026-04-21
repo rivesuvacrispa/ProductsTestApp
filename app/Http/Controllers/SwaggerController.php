@@ -60,7 +60,12 @@ use OpenApi\Annotations as OA;
  * @OA\Schema(
  *     schema="Product",
  *     title="Товар",
- *     @OA\Property(property="name", type="string", example="Товар 1"),
+ *     @OA\Property(property="id", type="int", example="1", description="Айди товара"),
+ *     @OA\Property(property="name", type="string", example="Товар 1", description="Название товара"),
+ *     @OA\Property(property="price", type="decimal", example=15.5, description="Стоимость товара"),
+ *     @OA\Property(property="in_stock", type="boolean", example=false, description="Наличие товара"),
+ *     @OA\Property(property="rating", type="decimal", example=3.25, description="Средняя оценка товара"),
+ *     @OA\Property(property="category_id", type="int", example=1, description="Айди категории"),
  * )
  *
  */

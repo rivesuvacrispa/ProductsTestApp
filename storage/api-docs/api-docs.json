@@ -29,19 +29,39 @@
                 "operationId": "list-products",
                 "parameters": [
                     {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Номер страницы",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Кол-во сущностей на странице",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10
+                        }
+                    },
+                    {
                         "name": "q",
-                        "in": "path",
+                        "in": "query",
                         "description": "Подстрочный поиск по названию товара",
                         "required": false,
                         "schema": {
                             "type": "string",
                             "default": "",
-                            "example": "Яблоко"
+                            "example": "atque"
                         }
                     },
                     {
                         "name": "price_from",
-                        "in": "path",
+                        "in": "query",
                         "description": "Фильтрация по цене, нижняя граница",
                         "required": false,
                         "schema": {
@@ -53,7 +73,7 @@
                     },
                     {
                         "name": "price_to",
-                        "in": "path",
+                        "in": "query",
                         "description": "Фильтрация по цене, верхняя граница",
                         "required": false,
                         "schema": {
@@ -65,40 +85,39 @@
                     },
                     {
                         "name": "category_id",
-                        "in": "path",
+                        "in": "query",
                         "description": "Фильтрация по айди категории",
                         "required": false,
                         "schema": {
                             "type": "integer",
-                            "example": "1"
+                            "default": null,
+                            "nullable": true
                         }
                     },
                     {
                         "name": "in_stock",
-                        "in": "path",
+                        "in": "query",
                         "description": "Фильтрация по наличию",
                         "required": false,
                         "schema": {
-                            "type": "boolean",
-                            "example": "false"
+                            "type": "boolean"
                         }
                     },
                     {
                         "name": "rating_from",
-                        "in": "path",
+                        "in": "query",
                         "description": "Фильтрация по рейтингу, нижняя граница",
                         "required": false,
                         "schema": {
                             "type": "number",
                             "format": "float",
-                            "default": "3",
-                            "example": 4.5
+                            "default": null
                         }
                     },
                     {
                         "name": "sort",
-                        "in": "path",
-                        "description": "Подстрочный поиск по названию товара",
+                        "in": "query",
+                        "description": "Сортировка",
                         "required": false,
                         "schema": {
                             "type": "string",
@@ -122,10 +141,10 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "products": {
+                                        "data": {
                                             "$ref": "#/components/schemas/Product"
                                         },
-                                        "pagination_meta": {
+                                        "pagination": {
                                             "$ref": "#/components/schemas/PaginationMeta"
                                         }
                                     },
@@ -194,9 +213,35 @@
             "Product": {
                 "title": "Товар",
                 "properties": {
+                    "id": {
+                        "description": "Айди товара",
+                        "type": "integer",
+                        "example": "1"
+                    },
                     "name": {
+                        "description": "Название товара",
                         "type": "string",
                         "example": "Товар 1"
+                    },
+                    "price": {
+                        "description": "Стоимость товара",
+                        "type": "decimal",
+                        "example": 15.5
+                    },
+                    "in_stock": {
+                        "description": "Наличие товара",
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "rating": {
+                        "description": "Средняя оценка товара",
+                        "type": "decimal",
+                        "example": 3.25
+                    },
+                    "category_id": {
+                        "description": "Айди категории",
+                        "type": "integer",
+                        "example": 1
                     }
                 },
                 "type": "object"
